@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 opencv-python = "^4.10.0.82"
 ultralytics = "^8.2.34"
+shapely = "^2.0.4"
 
 
 [build-system]
