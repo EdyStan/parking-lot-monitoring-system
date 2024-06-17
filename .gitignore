@@ -6,5 +6,4 @@ evaluation/submission_files
 output*/
 .venv/
 poetry.lock
-Project2.pdf
 *__pycache__
