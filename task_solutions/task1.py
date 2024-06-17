@@ -9,35 +9,46 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
     model = YOLO('yolov8n.pt')  
     print("Model loaded successfully")
 
+    parking_lots_coords = [
+        # Polygon 1
+        [(1604, 842), (1750, 893), (1750, 1047), (1568, 1039)],
+        # Polygon 2
+        [(1472, 761), (1609, 783), (1552, 984), (1413, 923)],
+        # Polygon 3
+        [(1345, 683), (1472, 744), (1401, 889), (1270, 813)],
+        # Polygon 4
+        [(1357, 664), (1258, 603), (1170, 733), (1272, 798)],
+        # Polygon 5
+        [(1247, 608), (1158, 568), (1084, 669), (1170, 729)],
+        # Polygon 6
+        [(1167, 563), (1092, 510), (1006, 613), (1086, 657)],
+        # Polygon 7
+        [(1089, 518), (1019, 481), (943, 564), (1006, 608)],
+        # Polygon 8
+        [(1023, 481), (952, 562), (889, 522), (958, 456)],
+        # Polygon 9
+        [(958, 451), (886, 530), (835, 483), (911, 418)],
+        # Polygon 10
+        [(914, 422), (838, 495), (794, 451), (870, 403)]
+    ]
+    parking_lots_coords = [Polygon(coordinates) for coordinates in parking_lots_coords]
+
+
     for file_name in os.listdir(TASK1_PATH):
         if not file_name.endswith('.jpg'):
             continue
         print(file_name)
+        with open(os.path.join(TASK1_PATH, file_name[:-4] + '_query.txt'), 'r') as file:
+            # Read all lines and convert them to integers
+            numbers = [int(line.strip()) for line in file.readlines()]
 
-        parking_lots_coords = [
-            # Polygon 1
-            [(1604, 842), (1750, 893), (1750, 1047), (1568, 1039)],
-            # Polygon 2
-            [(1472, 761), (1609, 783), (1552, 984), (1413, 923)],
-            # Polygon 3
-            [(1345, 683), (1472, 744), (1401, 889), (1270, 813)],
-            # Polygon 4
-            [(1357, 664), (1258, 603), (1170, 733), (1272, 798)],
-            # Polygon 5
-            [(1247, 608), (1158, 568), (1084, 669), (1170, 729)],
-            # Polygon 6
-            [(1167, 563), (1092, 510), (1006, 613), (1086, 657)],
-            # Polygon 7
-            [(1089, 518), (1019, 481), (943, 564), (1006, 608)],
-            # Polygon 8
-            [(1023, 481), (952, 562), (889, 522), (958, 456)],
-            # Polygon 9
-            [(958, 451), (886, 530), (835, 483), (911, 418)],
-            # Polygon 10
-            [(914, 422), (838, 495), (794, 451), (870, 403)]
-        ]
-        parking_lots_coords = [Polygon(coordinates) for coordinates in parking_lots_coords]
-        
+        # Store the first integer in a separate variable
+        first_number = numbers[0]
+
+        # Store the rest of the integers in a list
+        rest_of_numbers = numbers[1:]
+        print(first_number, rest_of_numbers, sep='\n')
+
         input_img = cv2.imread(os.path.join(TASK1_PATH, file_name))
         results = model(input_img)
         boxes_coords = results[0].boxes.xyxy
@@ -53,8 +64,10 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
             x1, y1, x2, y2 = coord
             mid = Point((x1+x2) * 0.5, (y1+y2) * 0.5)
 
-            for i, polygon in enumerate(parking_lots_coords):
-                if polygon.contains(mid):
+            for i in range(10):
+                if i+1 not in rest_of_numbers:
+                    continue
+                if parking_lots_coords[i].contains(mid):
                     print("Haubau:", i+1)
                     break
             
