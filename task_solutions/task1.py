@@ -38,15 +38,14 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
         if not file_name.endswith('.jpg'):
             continue
         print(file_name)
-        with open(os.path.join(TASK1_PATH, file_name[:-4] + '_query.txt'), 'r') as file:
-            # Read all lines and convert them to integers
+        in_txt_path = os.path.join(TASK1_PATH, file_name[:-4] + '_query.txt')
+        out_txt_path = os.path.join(TASK1_OUTPUT_PATH, file_name[:-4] + '_query.txt')
+        with open(in_txt_path, 'r') as file:
             numbers = [int(line.strip()) for line in file.readlines()]
 
-        # Store the first integer in a separate variable
         first_number = numbers[0]
 
-        # Store the rest of the integers in a list
-        rest_of_numbers = numbers[1:]
+        rest_of_numbers = {num: 0 for num in numbers[1:]}
         print(first_number, rest_of_numbers, sep='\n')
 
         input_img = cv2.imread(os.path.join(TASK1_PATH, file_name))
@@ -68,11 +67,21 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
                 if i+1 not in rest_of_numbers:
                     continue
                 if parking_lots_coords[i].contains(mid):
+                    rest_of_numbers[i+1] = 1
                     print("Haubau:", i+1)
                     break
-            
+        
+        with open(out_txt_path, 'w') as file:
+            file.write(str(first_number) + '\n')
+
+            for i, key_value_pair in enumerate(rest_of_numbers.items()):
+                if i != first_number - 1:
+                    file.write(str(key_value_pair[0]) + ' ' + str(key_value_pair[1]) + '\n')
+                else:
+                    file.write(str(key_value_pair[0]) + ' ' + str(key_value_pair[1]))
+                    
             # print(f'Label:{cls_name}\ntop-left: {int(x1), int(y1)} bottom-right: {int(x2), int(y2)}\n')
         # annotated_image = results[0].plot()
         # output_image_path = os.path.join(TASK1_OUTPUT_PATH, file_name)
         # cv2.imwrite(output_image_path, annotated_image)
-        break
+        # break
