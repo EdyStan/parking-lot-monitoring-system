@@ -1,0 +1,10 @@
+test/
+train/
+yolov8n.pt
+evaluation/fake_test/
+evaluation/submission_files
+output*/
+.venv/
+poetry.lock
+Project2.pdf
+*__pycache__

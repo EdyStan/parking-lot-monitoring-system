@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "project2"
+version = "0.1.0"
+description = ""
+authors = ["Eduard Stan <edigeorges50@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+opencv-python = "^4.10.0.82"
+ultralytics = "^8.2.34"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
