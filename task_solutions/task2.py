@@ -4,7 +4,7 @@ import cv2
 import os
 
 
-def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
+def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
     model = YOLO('yolov8n.pt')  
     print("Model loaded successfully")
 
@@ -33,21 +33,32 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
     parking_lots_coords = [Polygon(coordinates) for coordinates in parking_lots_coords]
 
 
-    for file_name in os.listdir(TASK1_PATH):
-        if not file_name.endswith('.jpg'):
+    for file_name in sorted(os.listdir(TASK2_PATH)):
+        if not file_name.endswith('.mp4'):
             continue
         print(file_name)
-        in_txt_path = os.path.join(TASK1_PATH, file_name[:-4] + '_query.txt')
-        out_txt_path = os.path.join(TASK1_OUTPUT_PATH, file_name[:-4] + '_query.txt')
-        with open(in_txt_path, 'r') as file:
-            numbers = [int(line.strip()) for line in file.readlines()]
+        out_txt_path = os.path.join(TASK2_OUTPUT_PATH, file_name[:-4] + '.txt')
 
-        first_number = numbers[0]
+        input_vid = cv2.VideoCapture(os.path.join(TASK2_PATH, file_name))
+        if not input_vid.isOpened():
+            print("Error: Could not open video.")
+            exit()
 
-        rest_of_numbers = {num: 0 for num in numbers[1:]}
-        print(first_number, rest_of_numbers, sep='\n')
+        
+        last_frame = None
 
-        input_img = cv2.imread(os.path.join(TASK1_PATH, file_name))
+        while True:
+            ret, frame = input_vid.read()
+            if not ret:
+                break
+            last_frame = frame
+
+        input_vid.release()
+
+        rest_of_numbers = {num+1: 0 for num in range(10)}
+
+
+        input_img = last_frame
         results = model(input_img)
         boxes_coords = results[0].boxes.xyxy
         cls_indices = results[0].boxes.cls
@@ -71,13 +82,11 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH):
                     break
         
         with open(out_txt_path, 'w') as file:
-            file.write(str(first_number) + '\n')
-
-            for i, key_value_pair in enumerate(rest_of_numbers.items()):
-                if i != first_number - 1:
-                    file.write(str(key_value_pair[0]) + ' ' + str(key_value_pair[1]) + '\n')
+            for i, val in enumerate(rest_of_numbers.values()):
+                if i != 9:
+                    file.write(str(val) + '\n')
                 else:
-                    file.write(str(key_value_pair[0]) + ' ' + str(key_value_pair[1]))
+                    file.write(str(val))
                     
             # print(f'Label:{cls_name}\ntop-left: {int(x1), int(y1)} bottom-right: {int(x2), int(y2)}\n')
         # annotated_image = results[0].plot()
