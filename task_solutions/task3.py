@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-from shapely.geometry import Polygon, Point
 import cv2
 import os
 
@@ -7,7 +6,6 @@ import os
 def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
     # initialize model
     model = YOLO('yolov8n.pt')  
-    print("Model loaded successfully")
 
     for file_name in sorted(os.listdir(TASK3_PATH)):
         if not file_name.endswith('.mp4'):
@@ -27,22 +25,25 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
             xi_mean = (xi1+xi2) * 0.5
             yi_mean = (yi1+yi2) * 0.5
 
-        tracker_initialized = False
         trace = []
 
         # capture video and loop through its frames
         input_vid = cv2.VideoCapture(os.path.join(TASK3_PATH, file_name))
+        reset_step = 30
+        i = -1
+        tracker = cv2.legacy_TrackerCSRT.create()
         while input_vid.isOpened():
+            i += 1
             # read the frame and check if the read is valid
             success, input_img = input_vid.read()
             if not success:
                 break
-            
-            # apply the model on the image and extract the bounding boxes coordinates
-            results = model(input_img)
-            boxes_coords = results[0].boxes.xyxy
 
-            if not tracker_initialized:
+            if i%reset_step == 0:
+                # apply the model on the image and extract the bounding boxes coordinates
+                results = model(input_img)
+                boxes_coords = results[0].boxes.xyxy
+
                 # Find the closest bounding box to the initial point
                 min_distance = float('inf')
                 closest_box = None
@@ -57,19 +58,27 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
 
                 if closest_box is not None:
                     # Initialize the tracker with the closest bounding box
-                    tracker = cv2.TrackerCSRT_create()  # or use any other tracker
+                    tracker = cv2.legacy_TrackerCSRT.create()
                     tracker.init(input_img, (int(closest_box[0]), int(closest_box[1]), int(closest_box[2] - closest_box[0]), int(closest_box[3] - closest_box[1])))
-                    # tracker.init(input_img, closest_box)
-                    tracker_initialized = True
                     trace.append((int(closest_box[0]), int(closest_box[1]), int(closest_box[2]), int(closest_box[3])))
 
             else:
                 # update the tracker and save the trace
                 success, box = tracker.update(input_img)
                 if success:
-                    print(box)
-                    trace.append(box)
+                    x1, y1, x2, y2 = box
+                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                    trace.append((x1, y1, x2, y2))
+                    # display the image with the tracking rectangle attached
+                    cv2.rectangle(input_img, (x1, y1), (x1+x2, y1+y2), (0, 255, 0), 2)
+                    cv2.imshow('Tracking', input_img)
+                    cv2.waitKey(1)
+                    if (i+1) % reset_step == 0:
+                        xi_mean = (x1+x1+x2) * 0.5
+                        yi_mean = (y1+y1+y2) * 0.5
 
+
+        cv2.destroyAllWindows()
         length = len(trace)
         with open(out_txt_path, 'w') as file:
             # Write the header

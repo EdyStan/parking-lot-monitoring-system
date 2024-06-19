@@ -6,7 +6,6 @@ import os
 
 def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
     model = YOLO('yolov8n.pt')  
-    print("Model loaded successfully")
 
     parking_lots_coords = [
         # Polygon 1
