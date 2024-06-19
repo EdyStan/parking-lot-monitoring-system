@@ -18,6 +18,8 @@ for file1 in files1:
         b = f2.read()
         if a == b:
             j += 1
+        else:
+            print(file1)
         # print('new')
         # print(a)
         # print(b)
