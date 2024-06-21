@@ -5,7 +5,8 @@ import os
 
 def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
     # initialize model
-    model = YOLO('yolov8n.pt')  
+    model_names = ['yolov10n.pt', 'yolov8s.pt']
+    models = [YOLO(name) for name in model_names]  
 
     for file_name in sorted(os.listdir(TASK3_PATH)):
         if not file_name.endswith('.mp4'):
@@ -29,7 +30,7 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
 
         # capture video and loop through its frames
         input_vid = cv2.VideoCapture(os.path.join(TASK3_PATH, file_name))
-        reset_step = 30
+        reset_step = 15
         i = -1
         tracker = cv2.legacy_TrackerCSRT.create()
         while input_vid.isOpened():
@@ -40,21 +41,23 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
                 break
 
             if i%reset_step == 0:
-                # apply the model on the image and extract the bounding boxes coordinates
-                results = model(input_img)
-                boxes_coords = results[0].boxes.xyxy
-
                 # Find the closest bounding box to the initial point
                 min_distance = float('inf')
                 closest_box = None
-                for coord in boxes_coords:
-                    x1, y1, x2, y2 = coord
-                    x_mean = (x1+x2) * 0.5
-                    y_mean = (y1+y2) * 0.5
-                    l1_distance = (abs(x_mean - xi_mean) + abs(y_mean - yi_mean))
-                    if l1_distance < min_distance:
-                        min_distance = l1_distance
-                        closest_box = coord
+
+                # apply the model on the image and extract the bounding boxes coordinates 
+                for model in models:
+                    results = model(input_img)
+                    boxes_coords = results[0].boxes.xyxy
+
+                    for coord in boxes_coords:
+                        x1, y1, x2, y2 = coord
+                        x_mean = (x1+x2) * 0.5
+                        y_mean = (y1+y2) * 0.5
+                        l1_distance = (abs(x_mean - xi_mean) + abs(y_mean - yi_mean))
+                        if l1_distance < min_distance:
+                            min_distance = l1_distance
+                            closest_box = coord
 
                 if closest_box is not None:
                     # Initialize the tracker with the closest bounding box

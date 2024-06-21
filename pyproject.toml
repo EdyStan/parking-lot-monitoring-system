@@ -7,10 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-ultralytics = "^8.2.34"
+ultralytics = {git = "https://github.com/THU-MIG/yolov10.git"}
 shapely = "^2.0.4"
 opencv-contrib-python = "^4.10.0.84"
-ipykernel = "^6.29.4"
+huggingface-hub = "^0.23.4"
 
 
 [build-system]

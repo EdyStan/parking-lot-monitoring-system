@@ -5,7 +5,8 @@ import os
 
 
 def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
-    model = YOLO('yolov8n.pt')  
+    model_names = ['yolov10n.pt', 'yolov8s.pt', 'yolov8m.pt']
+    models = [YOLO(name) for name in model_names]
 
     parking_lots_coords = [
         # Polygon 1
@@ -58,27 +59,27 @@ def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
 
 
         input_img = last_frame
-        results = model(input_img)
-        boxes_coords = results[0].boxes.xyxy
-        cls_indices = results[0].boxes.cls
-        names_dict = results[0].names
-        print(results[0].names[0])
         automobile_classes = ['car', 'truck']
+        for model in models:
+            results = model(input_img)
+            boxes_coords = results[0].boxes.xyxy
+            cls_indices = results[0].boxes.cls
+            names_dict = results[0].names
+            print(results[0].names[0])
 
-        for coord, cls_idx in zip(boxes_coords, cls_indices):
-            cls_name = names_dict[int(cls_idx)]
-            if cls_name not in automobile_classes:
-                continue
-            x1, y1, x2, y2 = coord
-            mid = Point((x1+x2) * 0.5, (y1+y2) * 0.5)
-
-            for i in range(10):
-                if i+1 not in rest_of_numbers:
+            for coord, cls_idx in zip(boxes_coords, cls_indices):
+                cls_name = names_dict[int(cls_idx)]
+                if cls_name not in automobile_classes:
                     continue
-                if parking_lots_coords[i].contains(mid):
-                    rest_of_numbers[i+1] = 1
-                    print("Haubau:", i+1)
-                    break
+                x1, y1, x2, y2 = coord
+                mid = Point((x1+x2) * 0.5, (y1+y2) * 0.5)
+
+                for i in range(10):
+                    if i+1 not in rest_of_numbers:
+                        continue
+                    if rest_of_numbers[i+1] != 1 and parking_lots_coords[i].contains(mid):
+                        rest_of_numbers[i+1] = 1
+                        break
         
         with open(out_txt_path, 'w') as file:
             for i, val in enumerate(rest_of_numbers.values()):

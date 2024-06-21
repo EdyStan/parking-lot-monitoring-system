@@ -1,6 +1,6 @@
 test/
 train/
-yolov8n.pt
+yolov*.pt
 evaluation/fake_test/
 evaluation/submission_files
 output*/
