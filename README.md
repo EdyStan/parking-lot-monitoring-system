@@ -89,13 +89,13 @@ The system uses YOLO models for object detection and computes bounding boxes aro
 
 The second task updates the configuration of 10 on-street parking spaces based on initial settings and video data analysis. Here's an example of how the system processes and updates configurations, based on the model used:
 
-![Comparison of Different YOLO Models](images/comparison.jpg)
+![Comparison of Different YOLO Models](images/comparison.png)
 *Figure 3: Comparison of different YOLO models.*
 
 ### Task 3: Vehicle Tracking
 
 In the third task, the system tracks specific vehicles across video frames. An example showing the tracking of a vehicle at different time steps:
 
-![Frames from Video](images/training_video_frames.jpg)
+![Frames from Video](images/training_video_frames.png)
 *Figure 4: Frames from a video with annotated vehicle tracking.*
 
