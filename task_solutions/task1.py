@@ -48,11 +48,16 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH, SHOW_DETAILS=False):
 
         automobile_classes = ['car', 'truck']
         input_img = cv2.imread(os.path.join(TASK1_PATH, file_name))
-        for model in models:
+        for i, model in enumerate(models):
             results = model(input_img)
             boxes_coords = results[0].boxes.xyxy
             cls_indices = results[0].boxes.cls
             names_dict = results[0].names
+
+            if SHOW_DETAILS:
+                annotated_image = results[0].plot()
+                output_image_path = os.path.join(TASK1_OUTPUT_PATH, f"{file_name[:-4]}_model{i}.jpg")
+                cv2.imwrite(output_image_path, annotated_image)
             
 
             for coord, cls_idx in zip(boxes_coords, cls_indices):
@@ -78,7 +83,3 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH, SHOW_DETAILS=False):
                 else:
                     file.write(str(key_value_pair[0]) + ' ' + str(key_value_pair[1]))
                     
-        if SHOW_DETAILS:
-            annotated_image = results[0].plot()
-            output_image_path = os.path.join(TASK1_OUTPUT_PATH, file_name)
-            cv2.imwrite(output_image_path, annotated_image)

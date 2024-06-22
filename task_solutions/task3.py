@@ -3,7 +3,7 @@ import cv2
 import os
 
 
-def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
+def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH, SHOW_DETAILS=False):
     # initialize model
     model_names = ['yolov10n.pt', 'yolov8s.pt']
     models = [YOLO(name) for name in model_names]  
@@ -73,9 +73,14 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH):
                     x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                     trace.append((x1, y1, x2, y2))
                     # display the image with the tracking rectangle attached
-                    cv2.rectangle(input_img, (x1, y1), (x1+x2, y1+y2), (0, 255, 0), 2)
-                    cv2.imshow('Tracking', input_img)
-                    cv2.waitKey(1)
+                    if SHOW_DETAILS:
+                        cv2.rectangle(input_img, (x1, y1), (x1+x2, y1+y2), (0, 255, 0), 2)
+                        cv2.imshow('Tracking', input_img)
+                        cv2.waitKey(1)
+                        # # extract the frames t(1-6) for pdf project report
+                        # if i == 1 or i % 92 == 0:
+                        #     cv2.rectangle(input_img, (x1, y1), (x1+x2, y1+y2), (0, 255, 0), 2)
+                        #     cv2.imwrite(os.path.join(TASK3_OUTPUT_PATH, f"{i}.jpg"), input_img)
                     if (i+1) % reset_step == 0:
                         xi_mean = (x1+x1+x2) * 0.5
                         yi_mean = (y1+y1+y2) * 0.5
