@@ -7,20 +7,20 @@ The goal of this project is to develop an automatic system for video analysis th
 - Classify on-street parking spaces as being occupied or not given a video frame.
 - Update configuration of parking spaces given the initial configuration and a video stream to process.
 - Track a specific vehicle in the scene of a given video.
+- Perform consistently under various environmental conditions, including different weather conditions and varying levels of luminosity.
 
 ## Table of Contents
 
 - [Key Features](#key-features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Implementation](#implementation)
 
 ## Key Features
 
 ### Real-time Parking Space Classification
 
 The system automatically classifies on-street parking spaces in a video frame as either occupied or free. It uses custom-defined polygons and object detection techniques to achieve this classification.
-
-![Parking Spaces Example](images/parking_spaces_example.png)
 
 ### Dynamic Configuration Update
 
@@ -30,7 +30,9 @@ The system can dynamically update the configuration of parking spaces based on t
 
 Using advanced object tracking algorithms, the system can track a specific vehicle across frames in a video feed. This capability enables detailed surveillance and monitoring of vehicle movements within the monitored scene.
 
-![Vehicle Tracking Example](images/vehicle_tracking_example.png)
+### Consistent Results
+
+Ensure stable and reliable outcomes across varying environmental conditions, including different weather and lighting scenarios.
 
 ## Installation
 
