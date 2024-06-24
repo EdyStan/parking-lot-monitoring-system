@@ -4,7 +4,7 @@ import cv2
 import os
 
 
-def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
+def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH, SHOW_DETAILS=False):
     model_names = ['yolov10n.pt', 'yolov8s.pt', 'yolov8m.pt']
     models = [YOLO(name) for name in model_names]
 
@@ -37,7 +37,7 @@ def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
         if not file_name.endswith('.mp4'):
             continue
         print(file_name)
-        out_txt_path = os.path.join(TASK2_OUTPUT_PATH, file_name[:-4] + '.txt')
+        out_txt_path = os.path.join(TASK2_OUTPUT_PATH, file_name[:-4] + '_predicted.txt')
 
         input_vid = cv2.VideoCapture(os.path.join(TASK2_PATH, file_name))
         if not input_vid.isOpened():
@@ -60,12 +60,18 @@ def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
 
         input_img = last_frame
         automobile_classes = ['car', 'truck']
-        for model in models:
+        for i, model in enumerate(models):
             results = model(input_img)
             boxes_coords = results[0].boxes.xyxy
             cls_indices = results[0].boxes.cls
             names_dict = results[0].names
             print(results[0].names[0])
+
+            if SHOW_DETAILS:
+                annotated_image = results[0].plot()
+                output_image_path = os.path.join(TASK2_OUTPUT_PATH, f"{file_name[:4]}_{i}.jpg")
+                cv2.imwrite(output_image_path, annotated_image)
+
 
             for coord, cls_idx in zip(boxes_coords, cls_indices):
                 cls_name = names_dict[int(cls_idx)]
@@ -88,8 +94,3 @@ def solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH):
                 else:
                     file.write(str(val))
                     
-            # print(f'Label:{cls_name}\ntop-left: {int(x1), int(y1)} bottom-right: {int(x2), int(y2)}\n')
-        # annotated_image = results[0].plot()
-        # output_image_path = os.path.join(TASK1_OUTPUT_PATH, file_name)
-        # cv2.imwrite(output_image_path, annotated_image)
-        # break

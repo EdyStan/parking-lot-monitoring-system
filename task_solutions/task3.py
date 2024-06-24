@@ -15,7 +15,7 @@ def solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH, SHOW_DETAILS=False):
 
         # initialize the paths
         tracker_init_path = os.path.join(TASK3_PATH, file_name[:-4] + '.txt')
-        out_txt_path = os.path.join(TASK3_OUTPUT_PATH, file_name[:-4] + '.txt')
+        out_txt_path = os.path.join(TASK3_OUTPUT_PATH, file_name[:-4] + '_predicted.txt')
 
         # get the initial coordinates of the vehicle we want to track
         with open(tracker_init_path, 'r') as tracker_file:

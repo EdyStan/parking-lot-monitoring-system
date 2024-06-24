@@ -38,7 +38,7 @@ def solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH, SHOW_DETAILS=False):
             continue
         print(file_name)
         in_txt_path = os.path.join(TASK1_PATH, file_name[:-4] + '_query.txt')
-        out_txt_path = os.path.join(TASK1_OUTPUT_PATH, file_name[:-4] + '_query.txt')
+        out_txt_path = os.path.join(TASK1_OUTPUT_PATH, file_name[:-4] + '_predicted.txt')
         with open(in_txt_path, 'r') as file:
             numbers = [int(line.strip()) for line in file.readlines()]
 
