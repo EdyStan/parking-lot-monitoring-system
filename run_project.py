@@ -1,4 +1,4 @@
-from task_solutions import task1, task2, task3
+from task_solutions import task1, task2, task3, task4
 import os
 
 # Whole project
@@ -17,6 +17,10 @@ TASK2_OUTPUT_PATH = os.path.join(PROJECT_PATH, 'output_train/Task2')
 TASK3_PATH = os.path.join(PROJECT_PATH, 'train/Task3')
 TASK3_OUTPUT_PATH = os.path.join(PROJECT_PATH, 'output_train/Task3')
 
+# Task 4
+TASK4_PATH = os.path.join(PROJECT_PATH, 'train/Task4')
+TASK4_OUTPUT_PATH = os.path.join(PROJECT_PATH, 'output_train/Task4')
+
 
 if not os.path.exists(TASK1_OUTPUT_PATH):
     os.makedirs(TASK1_OUTPUT_PATH)
@@ -27,7 +31,11 @@ if not os.path.exists(TASK2_OUTPUT_PATH):
 if not os.path.exists(TASK3_OUTPUT_PATH):
     os.makedirs(TASK3_OUTPUT_PATH)
 
+if not os.path.exists(TASK4_OUTPUT_PATH):
+    os.makedirs(TASK4_OUTPUT_PATH)
+
 
 task1.solve_task1(TASK1_PATH, TASK1_OUTPUT_PATH, SHOW_DETAILS)
 task2.solve_task2(TASK2_PATH, TASK2_OUTPUT_PATH, SHOW_DETAILS)
 task3.solve_task3(TASK3_PATH, TASK3_OUTPUT_PATH, SHOW_DETAILS)
+task4.solve_task4(TASK4_PATH, TASK4_OUTPUT_PATH, SHOW_DETAILS)
